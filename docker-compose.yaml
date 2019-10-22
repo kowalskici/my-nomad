@@ -1,21 +1,26 @@
 version: '3.7'
 
 x-references:
-    nomad-server: &nomad-server
-        image: nomad-server:0.1
-        command: ["start", "agent", "-config=/etc/nomad" ]
+  nomad-server: &nomad-server
+    image: nomad-server:0.1
+    command: ["start", "agent", "-config=/etc/nomad" ]
+
+  nomad-client: &nomad-client
+    privileged: true
+    image: nomad-client:0.1
+    command: ["start", "agent", "-config=/etc/nomad"]
+    volumes:
+      - ./sample:/job_spec
 services:
-    tester:
-        image: busybox
-    nomad-server-1:
-        *nomad-server
-    nomad-server-2:
-        *nomad-server
-    nomad-server-3:
-        *nomad-server
-    nomad-client:
-        privileged: true
-        image: nomad-client:0.1
-        command: ["start", "agent", "-config=/etc/nomad"]
-        volumes:
-            - ./sample:/usr/local/etc/sample
+  tester:
+    image: busybox
+  nomad-server-1:
+    *nomad-server
+  nomad-server-2:
+    *nomad-server
+  nomad-server-3:
+    *nomad-server
+  nomad-client-a:
+    *nomad-client
+  nomad-client-b:
+    *nomad-client

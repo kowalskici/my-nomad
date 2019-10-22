@@ -5,15 +5,19 @@ job "hello" {
     "default"]
 
   group "default" {
+    restart {
+      attempts = 3
+      delay = "30s"
+    }
 
     task "MyHelloTAsk" {
 
       driver = "raw_exec"
 
       config {
-        command = "echo"
+        command = "sleep"
         args = [
-          "hello"]
+          "3600"]
       }
 
       #resources {
