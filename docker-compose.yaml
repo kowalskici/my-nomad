@@ -2,7 +2,7 @@ version: '3.7'
 
 x-references:
     nomad-server: &nomad-server
-        image: nomadtest:0.2
+        image: nomad-server:0.1
         command: ["start", "agent", "-config=/etc/nomad" ]
 services:
     tester:
