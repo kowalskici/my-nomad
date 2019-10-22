@@ -1,0 +1,21 @@
+version: '3.7'
+
+x-references:
+    nomad-server: &nomad-server
+        image: nomadtest:0.2
+        command: ["start", "agent", "-config=/etc/nomad" ]
+services:
+    tester:
+        image: busybox
+    nomad-server-1:
+        *nomad-server
+    nomad-server-2:
+        *nomad-server
+    nomad-server-3:
+        *nomad-server
+    nomad-client:
+        privileged: true
+        image: nomad-client:0.1
+        command: ["start", "agent", "-config=/etc/nomad"]
+        volumes:
+            - ./sample:/usr/local/etc/sample

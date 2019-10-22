@@ -1,0 +1,28 @@
+FROM debian:9.8
+
+RUN apt-get update \
+  && apt-get upgrade -y \
+  && apt-get install -y curl
+
+ADD bin/nomad /usr/bin/nomad
+
+ADD default.hcl /usr/local/etc/nomad/default.hcl
+COPY client.hcl /etc/nomad/client.hcl
+COPY default.hcl /etc/nomad/default.hcl
+COPY server.hcl /etc/nomad/server.hcl
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod a+x /docker-entrypoint.sh
+
+VOLUME ["/opt/nomad"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["start"]
+
+# Server starts here
+
+RUN apt-get install -y sudo apt-transport-https software-properties-common ca-certificates netcat gnupg2 \
+  && curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add - \
+  && sudo add-apt-repository \
+  "deb [arch=amd64] https://download.docker.com/linux/debian        $(lsb_release -cs)        stable" \
+  && sudo apt-get update \
+  && sudo apt-get -y install docker-ce \
+  && rm -rf /var/lib/apt/lists/*
